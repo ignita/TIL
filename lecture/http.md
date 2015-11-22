@@ -8,7 +8,7 @@ HTTP의 구조는 요청(Request)과 응답(Response)로 구성되어 있다.
 * 199년, HTTP/1.1
 * 2015년, HTTP/2
 * TLS를 통한 보안이 적용된 버전은 HTTPS
-![HTTPS](http://the1994.github.io/tls/img/https.png)
+![HTTPS](https://github.com/the1994/TIL/blob/master/img/https.png?raw=true)
 
 ## 구조
 요청(Request)과 응답(Response)로 구성. 클라이언트가 요청을 하면 서버가 응답하는 구조이다. FTP나 Telnet과는 다르게 비연결식이다. FTP나 Telnet은 클라이언트가 서버에 정보를 요청해도 서버가 클라이언트와 연결을 끊지는 않지만, HTTP는 클라이언트가 서버에 정보를 요청하면 응답 코드와 내용을 전송하고 클라이언트와 연결을 종료한다.

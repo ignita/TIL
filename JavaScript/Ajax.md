@@ -13,12 +13,13 @@
  - 사용법  
   - **time.php**  
       현재 시간을 출력한다.  
-    ```php  
+    ```php
     <?php
     $d1 = new DateTime;
     $d1->setTimezone(new DateTimezone("asia/seoul"));
     echo $d1->format('H:i:s');
      ?>  
+     
     ```  
   - **demo1.html**  
     time.php에 접속해 현재 시간을 페이지에 표시한다.   
@@ -88,29 +89,30 @@ document.querySelector('input').addEventListener('click', function(event){
 </script>   
 ```  
 
-    데이터 전송방법을 GET에서 POST로 변경  
-    ```javascript  
-    xhr.open('POST', './time2.php');  
-    ```  
+데이터 전송방법을 GET에서 POST로 변경
+```javascript
+xhr.open('POST', './time2.php');  
+ ```  
 
-    서버로 전송할 데이터 타입의 형식(MIME)을 지정  
-    ```javascript  
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");  
-    ```
+서버로 전송할 데이터 타입의 형식(MIME)을 지정  
+```javascript
+xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");  
+```
 
-    서버로 전송할 데이터를 형식에 맞게 만든다. 이름=값&이름=값... 의 형식을 지켜야 한다.   
-    ```javascript  
-    var data = '';
-    data += 'timezone='+document.getElementById('timezone').value;
-    data += '&format='+document.getElementById('format').value;
-    ```  
+서버로 전송할 데이터를 형식에 맞게 만든다. 이름=값&이름=값... 의 형식을 지켜야 한다.   
+```javascript
+var data = '';
+data += 'timezone='+document.getElementById('timezone').value;
+data += '&format='+document.getElementById('format').value;
+```  
 
-    `send` 메소드의 인자로 전송할 데이터를 전달  
-    ```javascript  
-    xhr.send(data);
-    ```    
+`send` 메소드의 인자로 전송할 데이터를 전달  
+```javascript
+xhr.send(data);
+```    
 - **time2.php**  
 Ajax를 이용해 전송한 데이터를 받아 현재 시간을 출력해주는 서버쪽 코드  
+
 ```php  
 <?php
 $d1 = new DateTime;

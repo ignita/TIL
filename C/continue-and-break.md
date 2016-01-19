@@ -33,7 +33,7 @@ int main(void)
 ```  
 
 - 다음 식을 만족하는 모든 A와 Z를 구하는 프로그램(반복문 중첩)   
-![q2](../img/continue-and-break/1.png)     
+![q2](../img/continue-and-break/1.PNG)     
 
 ```c
 #include <stdio.h>

@@ -168,4 +168,33 @@ int euclidean(int num1, int num2)
 		euclidean(num1, num2);
 }
 ```
-어려운건 수학 알고리즘이 있으면 쉽게 풀 수 있다는 걸 느꼈다. 따로 또 공부해야겠다.
+어려운건 수학 알고리즘이 있으면 쉽게 풀 수 있다는 걸 느꼈다. 따로 또 공부해야겠다.   
+
+
+## 도전6  
+
+- 사용자로부터 초(second)를 입력 받은 후에, 이를 [시, 분, 초]의 형태로 출력하는 프로그램을 작성  
+
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int sec = 0;
+	int hour = 0;
+	int minute = 0;
+
+	printf("초(second) 입력: ");
+	scanf_s("%d", &sec, 1);
+
+	hour = sec / 3600;
+	sec = sec - hour * 3600;
+
+	minute = sec / 60;
+	sec = sec - minute * 60;
+
+	printf("[h:%d, m:%d, s:%d] \n", hour, minute, sec);
+	return 0;
+}  
+```  
+책에서는 함수를 만들어 사용했다. 나는 그냥 했다.  

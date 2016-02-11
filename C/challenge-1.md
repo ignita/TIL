@@ -197,4 +197,65 @@ int main(void)
 	return 0;
 }  
 ```  
-책에서는 함수를 만들어 사용했다. 나는 그냥 했다.  
+책에서는 함수를 만들어 사용했다. 나는 그냥 했다.    
+
+## 도전7  
+- 숫자 n을 입력받고, 다음 공식이 성립하는 k의 최댓값을 출력  
+`2^k <= n`   
+
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int n = 0;
+	int max = 1;
+	int k = 0;
+
+	printf("상수 n 입력: ");
+	scanf_s("%d", &n, 1);
+
+	if (n == 0)
+	{
+		printf("만족하는 k의 값 없음.\n");
+		return 0;
+	}
+	for (k = 0; max*2 <= n; k++)
+	{
+		max *= 2;
+	}
+	printf("공식을 만족하는 k의 최댓값은 %d\n", k);
+	return 0;
+}
+```
+
+
+
+## 도전8  
+- 2의 n승을 구하는 함수를 재귀적으로  
+
+```c
+#include <stdio.h>
+
+int square(int num);
+
+int main(void)
+{
+	int num = 0;
+	printf("정수 입력: ");
+	scanf_s("%d", &num, 1);
+
+
+
+	printf("2의 %d승은 %d\n", num, square(num));
+	return 0;
+}
+
+int square(int num)
+{
+	if (num == 0)
+		return 1;
+	return 2 * square(num - 1);
+
+}
+```

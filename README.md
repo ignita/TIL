@@ -48,7 +48,7 @@ $ cd ~/.pow
 $ ln -s ~/repo이름 til.wiki
 ```
 
-![gollum](../img/gollum.png)  
+![gollum](/img/gollum.png)  
 이건 http://til.dev/
 
 ### Anvil 설치

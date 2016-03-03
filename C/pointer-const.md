@@ -94,4 +94,24 @@ int main(void)
     ShowAllData(arr, 4);
     return 0;
 }
-```
+```  
+
+아래 예제에서 지적할만한 사항은 무엇인가? 이와 관련해 ShowData 함수를 유심히 관찰하자.  
+```c
+void ShowData(const int * ptr)
+{
+    int * rptr = ptr;
+    printf("%d \n", *rptr);
+    *rptr = 20;
+}
+
+int main(void)
+{
+    int num = 10;
+    int * ptr = &num;
+    ShowData(ptr);
+    return 0;
+}
+```  
+const선언으로 ShowData 함수 내의 ptr이 가리키는 변수의 값의 변경을 허용하고 있지 않고 있다. 하지만 다음 문장과 같이 ptr에 저장된 값을 const로 선언되지 않는 포인터 변수에 대입하고 있다. 그렇게 되면 결국엔 ptr이 가리키는 변수에 저장된 값을 변경할 수 있게 된다.  
+

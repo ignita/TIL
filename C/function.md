@@ -22,12 +22,12 @@ int main(void)
   - 예) 반환없이 함수를 빠져나간다.  
   ```c
   void NoReturnType(int num)
-{
+  {
 	   if (num < 0)
 		   return;
 	....
-}
-```  
+  }
+  ```  
 
 ## 재귀함수  
 - 같은 함수 내에서 자기 자신을 다시 호출하는 함수

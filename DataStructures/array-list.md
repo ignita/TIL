@@ -127,4 +127,225 @@ int LNext(List * plist, LData * pdata)
 - LFirst는 curPosition에 저장된 값을 0으로 재설정하면서 데이터 참조가 앞에서부터 다시 진행되도록 함.   
 - LNext는 이 값을 증가시켜서 순서대로 참조할 수 있게 함.   
 
+## 배열 기반 리스트: 삭제  
 
+- 삭제 함수가 호출된 사례  
+
+```c
+if(First(&list, &data))
+{
+    if(data == 22)
+        LRemove(&list);
+    
+    while(LNext(&list, &data))
+    {
+        if(data == 22)
+            LRemove(&list);
+    }
+}
+```
+- LFirst 함수나 LNext 함수의 호출을 통해서 바로 직전에 참조가 이뤄진 데이터를 삭제  
+
+```c
+LData LRemove(List * plist)
+{
+    int rpos = plist->curPosition;      // 삭제할 데이터의 인덱스 값 참조
+    int num = plist->numOfData;
+    int i;
+    LData rdata = plist->arr[rpos];     // 삭제할 데이터를 임시로 저장
+
+    // 삭제를 위한 데이터의 이동을 진행하는 반복문
+    for(i=rpos; i<num-1; i++)
+        plist->arr[i] = plist->arr[i+1];
+
+    (plist->numOfData)--;       // 데이터의 수 감소
+    (plist->curPosition)--;     // 참조위치를 하나 되돌린다
+    return rdata;               // 삭제된 데이터의 반환
+}
+```
+
+- [typedef선언](/http://cafe.naver.com/cstudyjava/46864)    
+
+## 리스트에 구조체 변수 저장하기1: 구조체 Point와 관련 함수들의 정의  
+
+- 구조체 정의   
+```c
+typedef struct _point
+{
+    int xpos;    // x좌표 정보  
+    int ypos;    // y좌표 정보
+} Point;
+```  
+- 함수 정의  
+```c
+void SetPointPos(Point * pops, int xpos, int ypos);  // 값을 저장  
+void ShowPointPos(Point * pops);                     // 정보 출력
+int PointComp(Point * pos1, Point * pos2);           // 비교  
+
+```
+- 비교 함수 반환 값  
+ - 두 Point 변수의 멤버 xpos만 같으면 1 반환  
+ - 두 Point 변수의 멤버 ypos만 같으면 2 반환   
+ - 두 Point 변수의 멤버가 모두 같으면 0 반환  
+ - 두 Point 변수의 멤버가 모두 다르면 -1 반환    
+
+- Point.h
+```c
+#ifndef __POINT_H__
+#define __POINT_H__
+
+typedef struct _point
+{
+    int xpos;
+    int ypos;
+} Point;
+
+// Point 변수의 xpos, ypos 값 설정
+void SetPointPos(Point * ppos, int xpos, int ypos);
+
+// Point 변수의 xpos, ypos 정보 출력
+void ShowPointPos(Point * ppos);
+
+// 두 Point 변수의 비교
+int PointComp(Point * pos1, Point * pos2);
+
+#endif
+```
+
+- Point.c  
+```c
+#include <stdio.h>
+#include "Point.h"
+
+void SetPointPos(Point * ppos, int xpos, int ypos)
+{
+    ppos->xpos = xpos;
+    ppos->ypos - ypos;
+}
+
+void ShowPointPos(Point * ppos)
+{
+    printf("[%d, %d] \n", ppos->xpos, ppos->ypos);
+}
+
+int PointComp(Point * pos1, Point * pos2)
+{
+    if(pos1->xpos == pos2->xpos && pos1->ypos == pos2->ypos)
+        return 0;
+    else if(pos1->xpos == pos2->xpos)
+        return 1;
+    else if(pos1->ypos == pos2->ypos)
+        return 2;
+    else
+        return -1;
+}
+```
+
+- ArrayList.h 헤더파일의 다음 코드를 변경한다.  
+ - `typedef int LData;` → `typedef Point * LData;`   
+ - `#include "Point.h"`     
+
+- main.c  
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include "ArrayList.h"
+#include "Point.h"
+
+int main(void)
+{
+    List list;
+    Point compPos;
+    Point * ppos;
+
+    ListInit(&list);
+
+    // 4개의 데이터 저장
+    ppos = (Point*)malloc(sizeof(Point));
+    SetPointPos(ppos, 2, 1);
+    LInsert(&list, ppos);
+
+    ppos = (Point*)malloc(sizeof(Point));
+    SetPointPos(ppos, 2, 2);
+    LInsert(&list, ppos);
+
+    ppos = (Point*)malloc(sizeof(Point));
+    SetPointPos(ppos, 3, 2);
+    LInsert(&list, ppos);
+
+    // 저장된 데이터 출력
+    printf("현재 데이터의 수: %d \n", LCount(&list));
+
+    if(LFirst(&list, &ppos))
+    {
+        ShowPointPos(ppos);
+
+        while(LNext(&list, &ppos))
+            ShowPointPos(ppos);
+    }
+
+    printf("\n");
+
+    // xpos가 2인 모든 데이터 삭제
+    compPos.xpos = 2;
+    compPos.ypos = 0;
+
+    if(LFirst(&list, &ppos))
+    {
+        if(PointComp(ppos, &compPos) == 1)
+        {
+            ppos = LRemove(&list);
+            free(ppos);
+        }
+
+        while(LNext(&list, &ppos))
+        {
+            if(PointComp(ppos, &compPos) ==1)
+            {
+                ppos = LRemove(&list);
+                free(ppos);
+            }
+        }
+    }
+
+    // 삭제 후 남은 전체 데이터 출력
+    printf("현재 데이터의 수: %d \n", LCount(&list));
+
+    if(LFirst(&list, &ppos))
+    {
+        ShowPointPos(ppos);
+
+        while(LNext(&list, &ppos))
+            ShowPointPos(ppos);
+    }
+    printf("\n");
+
+    return 0;
+}
+```
+```
+현재 데이터의 수: 3 
+[2, 1] 
+[2, 2] 
+[3, 2] 
+
+현재 데이터의 수: 1 
+[3, 2] 
+```   
+
+- 위 예에서 리스트에 저장한 데이터는 Point 구조체 변수의 주소값이기 때문에 Point 구조체를 동적으로 할당한 결과이다. 그래서 반드시 free 함수를 통해 메모리의 해제과정을 거쳐야 한다.     
+
+## 배열의 장점과 단점과 연결 기반 리스트   
+
+- 단점  
+ - 배열의 길이가 촉에 결정되어야 하고, 변경이 불가능  
+ - 삭제의 과정에서 데이터의 이동(복사)가 매우 빈번히 일어남   
+- 장점  
+ - 데이터의 참조가 쉽다. 인덱스 값을 기준으로 어디든 한 번에 참조가 가능   
+
+## 문제   
+- NameCard.c 작성하기   
+
+ - NameCard.h의 내용   
+ ```c
+  

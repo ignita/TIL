@@ -201,5 +201,133 @@ int WhoIsPrecede(LData d1, LData d2)  // typedef int LData;
 - 지금까지 연결 리스트에서는 첫 번째 노드가 포인터 변수 head가 가리킨다는 점에서 노드를 추가 삭제 조회하는 방법이 두 번째 이후의 노드와 차이가 있다.  
  - 그래서 더미 노드(빈 노드)를 추가해 처음 추가되는 노드가 구조상 두 번째 노드가 되는 것으로 일관된 형태로 노드를 추가 및 삭제, 조회하는 구성이 가능하다.     
 
+### 정렬 기능이 추가된 연결 리스트를 위한 헤더 파일과 구조체의 정의   
+
+- 배열 처럼, 리스트 자료구조도 프로그램에 하나만 사용된다는 법이 없다. 따라서 다수의 리스트 자료구조가 필요하기 때문에 다음과 같이 연결 리스트를 의미하는 별도의 구조체를 정의해야 한다.   
+```c
+typedef struct _linkedList
+{
+    Node * head;       // 더미 노드를 가리키는 멤버
+    Node * cur;        // 참조 및 삭제를 돕는 멤버
+    Node * before;     // 삭제를 돕는 멤버
+    int numOfData;     // 저장된 데이터의 수를 기록하기 위한 멤버  
+    int (*comp)(LData d1, LData d2);   // 정렬의 기준을 등록하기 위한 멤버  
+} LinkedList;
+```  
+
+#### 헤더 파일  
+
+```c
+//
+// Created by ox on 2016. 5. 7..
+//
+
+#ifndef ARRAYLIST2_DLINKEDLIST_H
+#define ARRAYLIST2_DLINKEDLIST_H
+
+#define TRUE        1
+#define FALSE       0
+
+typedef int LData;
+
+typedef struct _node
+{
+    LData data;
+    struct _node * next;
+} Node;
+
+typedef struct _linkedList
+{
+    Node * head;
+    Node * cur;
+    Node * before;
+    int numOfData;
+    int (*comp)(LData d1, LData d2);
+} LinkedList;
+
+typedef LinkedList List;
+
+void ListInit(List * plist);
+void LInsert(List * plist, LData data);
+
+int LFirst(List * plist, LData * pdata);
+int LNext(List * plist, LData * pdata);
+
+LData LRemove(List * plist);
+int LCount(List * plist);
+
+void SetSortRule(List * plist, int (*comp)(LData d1, LData d2));
+
+#endif //ARRAYLIST2_DLINKEDLIST_H
+```
+
+- 구조체 초기화 함수  
+```c
+void ListInit(List * plist)
+{
+    plist->head = (Node*)malloc(sizeof(Node));      // 더미 노드의 생성
+    plist->head->next = NULL;
+    plist->comp = NULL;
+    plist->numOfData = 0;
+}
+```
+- 노드의 추가  
+```c
+void LInsert(List * plist, LData data)
+{
+    if(plist->comp == NULL)     // 정렬 기준이 없다면,
+        FInsert(plist, data);   // 머리에 노드를 추가
+    else                        // 정렬 기준이 존재한다면,
+        SInsert(plist, data);   // 정렬 기준에 근거하여 노드를 추가  
+}
+```  
+ - `FInsert`와 `SInsert`함수는 헤더파일에 선언된 함수가 아니기 때문에 리스트를 사용하는 프로그래머가 이 두 함수를 직접 호출할 수 없다.  
+
+ - FInsert  
+```c
+void FInsert(List * plist, LData data)
+{
+    Node * newNode = (Node*)malloc(sizeof(Node));       // 새 노드 생성
+    newNode->data = data;                               // 새 노드에 데이터 저장
+    
+    newNode->next = plist->head->next;                  // 새 노드가 다른 노드를 가리키게 함 
+    plist->head->next = newNode;                        // 더미 노드가 새 노드를 가리키게 함
+    
+    (plist->numOfData)++;                               // 저장된 노드의 수를 하나 증가시킴
+}
+```  
+   - 포인터 변수 head가 NULL이 아닌 더미 노드를 가리키고 있다는 사실을 잊지 말아야 함.   
+
+- 데이터 조회   
+```c
+int LFirst(List * plist, LData * pdata)
+{
+    if(plist->head->next == NULL)       // 더미 노드가 NULL을 가리킨다면,
+        return FALSE;                   // 반환할 데이터가 없다.
+
+    plist->before = plist->head;        // before은 더미 노드를 가리키게 함
+    plist->cur = plist->head->next;     // cur은 첫 번째 노드를 가리키게 함
+
+    *pdata = plist->cur->data;          // 첫 번재 노드의 데이터를 전달
+    return TRUE;
+}
+```
+```c
+int LNext(List * plist, LData * pdata)
+{
+    if(plist->cur->next == NULL)        // cur이 NULL을 가리킨다면,
+        return FALSE;                   // 반환할 데이터가 없다.
+    
+    plist->before = plist->cur;         // cur이 가리키던 것을 before가 가리킴 
+    plist->cur = plist->cur->next;      // cur은 그 다음 노드를 가리킴
+    
+    *pdata = plist->cur->data;          // cur이 가리키는 노드의 데이터 전달
+    return TRUE;                        // 데이터 반환 성공 
+}
+```
+ - before를 둬서 멤버 cur보다 하나 앞선 노드를 가리키게 하는 이유: 노드의 삭제와 관련이 있다.   
+
+
+- 노드의 삭제  
 
 

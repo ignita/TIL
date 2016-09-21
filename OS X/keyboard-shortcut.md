@@ -39,3 +39,6 @@ OS X El Capitan
 **활성 창**  
 <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>4</kbd>+<kbd>Space</kbd>  
 
+## 참고  
+
+http://www.danrodney.com/mac/

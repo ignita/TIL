@@ -6,6 +6,12 @@
 - cloud는 체크 해제  
 - 설치 후 실행하면 `http://127.0.0.1:8080` 주소로 브라우저에서 실행이 됨.  
 
+# 윈도우에서 BITNAMI 설치  
+
+- [WAMP Stack](https://bitnami.com/stack/wamp) 설치   
+- 이후로 맥과 똑같이 설치하면 됨.  
+
+
 ## 127.0.0.1 == localhost  
 
 - localhost는 웹 브라우저가 설치되어 있는 컴퓨터를 의미  

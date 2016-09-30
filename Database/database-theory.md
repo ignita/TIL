@@ -68,5 +68,89 @@ Query OK, 1 row affected (0.00 sec)
 | test               |
 +--------------------+
 5 rows in set (0.00 sec)
+ ```
 
+- DB 사용하기  
 ```
+mysql> use opentutorials;
+Database changed
+```  
+
+- table 만들기  
+```
+mysql> CREATE TABLE `topic` (
+    -> `id` int(11) NOT NULL AUTO_INCREMENT, 
+    -> `title` varchar(100) NOT NULL, 
+    -> `description` text NOT NULL,
+    -> `author` varchar(30) NOT NULL,
+    -> `created` datetime NOT NULL,
+    -> PRIMARY KEY(id)  
+    -> ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+Query OK, 0 rows affected (0.04 sec)
+```
+ - topic: table명  
+ - id: 컬럼명  
+ - int(11): id는 숫자가 와야한다.  
+ - NOT NULL: 반드시 id값이 존재해야한다.  
+ - AUTO_INCREMENT: 행이 추가될 때마다 숫자를 1씩 올림  
+ - `title` varchar(100): title에 들어가는 정보가 100자 이내  
+ - `description` text : description에 들어가는 정보는 긴 텍스트를 받을 수 있어야함  
+ - `author` archer(30): 작성자  
+ - `created` datetime: 시간과 날짜  
+
+- table 확인  
+```
+mysql> show tables;
++-------------------------+
+| Tables_in_opentutorials |
++-------------------------+
+| topic                   |
++-------------------------+
+1 row in set (0.00 sec)
+```  
+
+- 정보를 table에 추가하기  
+```
+mysql> INSERT INTO `topic` (title, description, author, created) VALUES('about javascript', 'javascript is ~~', 'egoing', '2016-9-30 11:57:5');
+Query OK, 1 row affected (0.02 sec)
+```  
+
+- 정보 가져오기  
+```
+mysql> SELECT * FROM topic;
++----+------------------+------------------+--------+---------------------+
+| id | title            | description      | author | created             |
++----+------------------+------------------+--------+---------------------+
+|  1 | about javascript | javascript is ~~ | egoing | 2016-09-30 11:57:05 |
++----+------------------+------------------+--------+---------------------+
+1 row in set (0.01 sec)
+```  
+ - SELECT: 선택  
+ - *: 컬럼  
+ - AUTO_INCREMENT는 정보를 직접 추가하지 않아도 자동으로 증가.  
+
+- id로 찾기  
+```
+mysql> select id,title,author,created from topic WHERE id=3;
++----+----------+--------+---------------------+
+| id | title    | author | created             |
++----+----------+--------+---------------------+
+|  3 | Opeartor | egoing | 2015-06-18 05:00:00 |
++----+----------+--------+---------------------+
+1 row in set (0.01 sec)
+```  
+
+- 정렬: id가 큰 순서대로    
+```
+mysql> select id,title,author,created FROM topic ORDER BY id DESC;
++----+-------------------------+---------+---------------------+
+| id | title                   | author  | created             |
++----+-------------------------+---------+---------------------+
+|  3 | Opeartor                | egoing  | 2015-06-18 05:00:00 |
+|  2 | variable and constatntt | the1994 | 2016-09-30 12:03:05 |
+|  1 | about javascript        | egoing  | 2016-09-30 11:57:05 |
++----+-------------------------+---------+---------------------+
+3 rows in set (0.00 sec)
+```   
+
+

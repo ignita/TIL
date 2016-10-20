@@ -95,3 +95,90 @@
  : 내부적 관점, 외부적 관점  
 - 그림의 오른쪽 부분은 게이트의 내부적 구조 또는 implementations, 왼쪽은 interface, 즉 외부 세계에 드러나져 있는 input, output pins를 의미한다. 전자는 오직 게이트 디자이너와 관계되어 있는 반면에 후자는 내부적 구조에 관심을 가지지 않는 추상적 규격으로 게이트를 사용하기 원하는 다른 디자이너에게 맞는 수준이다.  
 
+
+## Hardware Description Language(HDL)  
+
+- 현대의 하드웨어 디자이너들은 더 이상 맨손으로 설계를 할 필요가 없어짐 → 대신에 컴퓨터로 HDL(VHDL, V는 Virtual을 나타냄)과 같은 구조 모델링 정형화 도구를 사용해 칩 구조를 설계, 최적화  
+-> 컴퓨터 시뮬레이션을 사용해 가상적으로 테스팅도 수행한다: 하드웨어 시뮬레이터 사용  
+- HDL을 사용해 칩의 실제 제조에 앞서 돈 한 푼 들이지 않고 계획, 디버깅, 최적화가 가능하다.  
+
+**Explanation**  
+- HDL은 header 섹션과 parts 섹션으로 구성된 칩의 정의  
+ - header 섹션은 인터페이스, 즉 칩 이름과 그것의 input, output 핀의 이름을 명시  
+ - parts 섹션은 칩이 구성되었을 때 하위 레벨 파트(다른 칩들)의 토폴로지와 이름을 설명  
+
+**Testing**  
+- 하드웨어 시뮬레이터는 script언어로 작성된 test script를 실행하도록 설계되어 있다.    
+
+
+## Hardware Simulation  
+- HDL은 하드웨어 구성 언어이기 때문에 HDL program의 작성과 디버깅 과정은 SW 개발과 꽤 유사하다.  
+- 주된 차이점은 자바 같은 언어로 코드를 작성하는 게 아닌 HDL을 작성해 넣는다는 것이다.  
+- 그리고 컴파일러를 사용해 번역, 테스트를 하는 대신에 Hadrware Simulator를 사용한다.  
+- Hadrware Simulator은 HDL code를 번역하고 분석하는 프로그램을 실행 가능 상태로 바꿔주고, test script로 주어진 설명에 따른 테스트도 한다.  
+
+## Nand 게이트  
+
+| a | b | Nand(a,b) | 
+| --- | --- | :---: |
+| 0 | 0 | 0 |   
+| 0 | 0 | 1 |  
+| 0 | 1 | 0 |   
+| 0 | 1 | 1 |   
+| 1 | 0 | 0 |    
+| 1 | 0 | 1 |   
+| 1 | 1 | 0 |   
+| 1 | 1 | 1 |    
+
+**Chip API**  
+```
+Chip name: Nand  
+Inputs: a, b  
+Outputs: out  
+Function: If a=b=1 then out=0 else out=1  
+```  
+
+## 기본 논리 게이트  
+
+**Not**  
+- converter: 입력을 0에서 1로 또 반대로 바꾼다.   
+```
+Chip name: Not  
+Inputs: in
+Output: out  
+Function: If in=0 them out=1 else out=0  
+```
+
+**And**  
+- And 함수는 두 입력이 모두 1이면 1, 나머지는 0을 반환  
+```
+Chip name: And  
+Inputs: a, b  
+Output: out   
+Function: If a=b=1 then out=1 else out=0  
+```
+
+**Or**
+- 적어도 하나의 입력이 1이면 1, 나머지는 0을 반환  
+```
+Chip name: Or  
+Inputs: a,b  
+Output: out   
+Function: If a=b=0 then out=0 else out=1  
+```
+
+**Xor**  
+- exclusive or: 두 입력이 서로 다르면 1, 나머지는 0을 반환   
+
+**멀티플렉서**  
+
+- 세 개의 input 중 하나를 "section bit"로 사용  
+- 다른 두 input(data bit) 중 하나를 선택해서 output  
+- selector라고도 한다.   
+
+```  
+chip name: Mux  
+Inputs: a, b, sel  
+Output: out  
+Function: If sel=0 then out=a else out=b  
+```

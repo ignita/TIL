@@ -24,4 +24,38 @@ typealias Duration = (start:Time, end:Time)
 
 let today:Duration = ((9,10,23), (17,8,21))
 print("We studied until \(today.end.h) today")
+```  
+
+**Array**  
+- Array 정의 방법
+    - Array<Type>() 또는 [Type]
+- Array의 let과 var
+    - Array도 let으로 만들면 수정 불가
+- Array의 Type
+    - Array 안에는 동일한 타입의 인스턴스가 들어가야 함  
+```swift
+
+var meetingRooms:Array<String> = ["Bansky", "Rivera", "Kahlo", "Picasso", "Cezanne", "Matisse"]
+var groups:[Int] = [10, 8, 14, 9]
+
+meetingRooms += ["Renoir"]
+
+let maxSpeed:Int = 200
+
+var curSpeed:Int = 110
+curSpeed += 10
+
+var speedHistory:[Int] = []
+speedHistory += [curSpeed]
+
+let gpsSpeed0901 = 114.1
+speedHistory.append(Int(gpsSpeed0901))
+
+speedHistory[1]
+speedHistory.first
+speedHistory.last
+
+let historyBackup = speedHistory
+speedHistory += [150]
+historyBackup
 ```

@@ -211,3 +211,364 @@ scores[0].length // 3(배열 B의 길이)
 scores[1].length // 3(배열 C의 길이)  
 ```
 
+**객체를 참조하는 배열**  
+
+- 기본 타입 배열은 각 항목에 직접 값을 가지고 있지만, 참조 타입(클래스, 인터페이스) 배열은 각 항목에 객체의 번지를 가진다.  
+  - 예) String은 클래스 타입 →→ String[] 배열은 각 항목에 문자열이 아닌 String 객체의 주소를 가진다.   
+- 따라서 String[] 배열 항목 간에 문자열 비교는 `equals()` 메소드를 사용해야 한다.    
+```java
+public class ArrayReferenceObjectExample {
+    public static void main(String[] args) {
+        String[] strArray = new String[3];
+        strArray[0] = "Java";
+        strArray[1] = "Java";
+        strArray[2] = new String("Java");
+
+        System.out.println( strArray[0] == strArray[1]);        // true
+        System.out.println( strArray[0] == strArray[2]);        // false
+        System.out.println( strArray[0].equals(strArray[2]));   // true
+    }
+}
+```
+
+**배열 복사**  
+
+- for문 이용  
+```java
+public class ArrayCopyByForExample {
+    public static void main(String[] args) {
+        int[] oldIntArray = {1, 2, 3};
+        int[] newIntArray = new int[5];
+
+        for(int i=0; i<oldIntArray.length; i++) {
+            newIntArray[i] = oldIntArray[i];
+        }
+
+        for(int i=0; i<newIntArray.length; i++) {
+            if(i != (newIntArray.length-1)) {
+                System.out.print(newIntArray[i] + ", ");
+            }
+            else {
+                System.out.print(newIntArray[i]);
+            }
+        }
+    }
+}
+```
+- `Systemarraycopy()` 메소드 사용     
+```java
+System.arraycopy(Object src, int srcPos, Object dest, int destPos, int length);
+```  
+  - src 매개값: 원본 배열  
+  - srcPos: 원본 배열에서 복사할 항목의 시작 인덱스  
+  - dest: 새 배열  
+  - destPos: 새 배열에서 붙여넣을 시작 인덱스  
+  - length: 복사할 개수  
+
+ ```java  
+ public class ArrayCopyExample {
+     public static void main(String[] args) {
+         String[] oldStrArray = { "java", "array", "copy" };
+         String[] newStrArray = new String[5]; 
+ 
+         System.arraycopy( oldStrArray, 0, newStrArray, 0, oldStrArray.length);
+ 
+         for(int i=0; i< newStrArray.length; i++) {
+             System.out.print(newStrArray[i] + ", "); // java, array, copy, null, null
+         }
+     }
+ }
+ ```
+
+- 참조 타입 배열일 경우, 배열 복사가 되면 복사되는 값이 객체이 번지이므로 **새 배열의 항목은 이전 배열의 항목이 참조하는 객체와 동일**  
+ - 얕은 복사(shallow copy)라 한다. 반대로 **깊은 복사(deep copy)는 참조하는 객체도 별도로 생성**하는 것.  
+
+**향상된 for문**  
+
+- 반복 실행을 위해 카운터 변수와 증감식을 사용하지 않는다.  
+- 배열 및 컬렉션 항목의 개수만큼 복사하고, 자동적으로 for문을 빠져나간다.  
+```java
+public class AdvancedForExample {
+    public static void main(String[] args) {
+        int[] scores = { 95, 71, 84, 93, 87 };
+
+        int sum = 0;
+        for (int score : scores ) {
+            sum += score;
+        }
+        System.out.println("점수 총합 = " + sum);
+
+        double avg = (double) sum / scores.length;
+        System.out.println("점수 평균 = " + avg);
+    }
+}
+```  
+
+## 열거 타입  
+
+- 한정된 값만을 갖는 데이터 타입  
+- 몇 개의 열거 상수(enumeration constant) 중에서 하나의 상수를 저장하는 데이터 타입  
+
+**열거 타입 선언**  
+
+- 열거 타입을 선언하기 위해서는 열거 타입의 이름을 정하고 열거 타입 이름으로 소스 파일(.java)을 생성해야 한다.  
+- 열거 타입 이름은 관례적으로 첫 문자를 대문자로하고 나머지는 소문자로 구성  
+```
+public enum 열거타입이름 { .... }  
+```
+- 열거 상수는 관례적으로 열거 상수는 모두 대문자로 작성한다.  
+- 열거 상수가 여러 단어로 구성될 경우에는 단어 사이를 밑줄(_)로 연결하는 것이 관례  
+```java
+public enum LoginResult { LOGIN_SUCCESS, LOGIN_FAILED }  
+```
+- IntelliJ IDEA에서 <kbd>⌘</kbd> + <kbd>N</kbd> - 탭에서 'enum' 선택  
+```java
+public enum Week {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY
+}
+```
+
+**열거 타입 변수**  
+
+- 열거 타입도 데이터 타입이므로 변수를 선언하고 사용해야 한다.  
+```java
+Week today;
+Week reservationDay;
+```
+
+- 열거 상수는 열거타입.열거상수로 사용된다.  
+```java
+Week today = Week.SUNDAY;
+```
+- null 값도 저장 가능하다.   
+- 열거 상수도 객체이다.  
+- 열거 타입 변수 today는 스택 영역에 생성되고, 저장되는 값은 Week.SUNDAY 열거 상수가 참조하는 객체의 번지이다.  
+```java
+today == Week.SUNDAY // true  
+```
+
+- 자바는 컴퓨터의 날짜 요일, 시간을 프로그램에서 사용할 수 있도록 `Date`, `Calendar`, `LocalDayeTime` 등의 클래스를 제공한다.   
+```java
+Calendar now = Calendar.getInstance();
+
+int year = now.get(Calendar.YEAR);  
+int month = now.get(Calendar.MONTH) + 1;
+int day = now.get(Calendar.DAY_OF_MONTH);
+int week = now.get(Calendar.DAY_OF_WEEK);  
+int hour = now.get(Calendar.HOUR);
+int minute = now.get(Calendar.MINUTE);
+int second = now.get(Calendar.SECOND);  
+```
+
+```java
+/**
+ * Created by ox on 2016. 12. 27..
+ */
+import java.util.Calendar;
+
+public class EnumWeekExample {
+    public static void main(String[] args) {
+        Week today = null;
+
+        Calendar cal = Calendar.getInstance();
+        int week = cal.get(Calendar.DAY_OF_WEEK);
+
+        switch(week) {
+            case 1:
+                today = Week.SUNDAY; break;
+            case 2:
+                today = Week.MONDAY; break;
+            case 3:
+                today = Week.TUESDAY; break;
+            case 4:
+                today = Week.WEDNESDAY; break;
+            case 5:
+                today = Week.THURSDAY; break;
+            case 6:
+                today = Week.FRIDAY; break;
+            case 7:
+                today = Week.SATURDAY; break;
+        }
+
+        System.out.println("오늘 요일: " + today);
+
+        if(today == Week.SUNDAY) {
+            System.out.println("일요일에는 축구를 합니다.");
+        } else {
+            System.out.println("열심히 자바 공부합니다.");
+        }
+    }
+}
+```
+
+**열거 객체의 메소드**  
+
+| 리턴 타입 | 메소드(매개 변수) | 설명 |  
+| --- | --- | --- |  
+| String | name() | 열거 객체의 문자열을 리턴 |  
+| int | ordinal() | 열거 객체의 순번(0부터 시작)을 리턴 |  
+| int | compareTo() | 열거 객체를 비교해서 순번 차이를 리턴 |  
+| 열거 타입 | valueOf(String name) | 주어진 문자열의 열거 객체를 리턴 |  
+| 열거 배열 | values() | 모든 열거 객체들을 배열로 리턴 |  
+
+
+**name() 메소드**  
+
+- 열거 객체가 가지고 있는 문자열을 리턴  
+```java
+Week today = Week.SUNDAY;
+String name = today.name(); // return SUNDAY
+```
+
+**ordinal() 메소드**  
+- 전체 열거 객체 중 몇 번째 열거 객체인지 알려준다.  
+```java
+Week today = Week.SUNDAY;
+int ordinal = today.ordinal(); // return 6
+```
+
+**compareTo() 메소드**  
+- 매개값으로 주어진 열거 객체를 기준으로 전후로 몇 번째 위치하는지를 비교  
+- 만약 열거 객체가 매개값의 열거 객체보다 순번이 빠르면 음수, 순번이 늦다면 양수가 리턴.  
+```java
+Week day1 = Week.MONDAY;
+Week day2 = Week.WEDNESDAY;
+int result1 = day1.compareTo(day2);  // -2  
+int result2 = day2.compareTo(day1);  // 1
+```
+
+**valueOf() 메소드**  
+- 매개값으로 주어지는 문자열과 동일한 문자열을 가지는 열거 객체를 리턴  
+- 다음 코드에서 weekDay 변수는 Week.SATURDAY 열거 객체를 참조하게 된다.  
+```java
+Week weekDay = Week.valueOf("SATURDAY");  
+```
+
+**values() 메소드**  
+- 열거 타입의 모든 열거 객체들을 배열로 만들어서 리턴한다.  
+```java
+Week[] days = Week.values();
+for(Week day : days) {
+    System.out.println(day);
+```
+
+## 확인문제  
+
+1. 4 (null로 초기화할 수 있다.)
+2. 3 (직접할 필요없이 자동으로 JVM이 자동으로 처리한다.)  
+3. 2 (equals() 메소드를 사용한다.) 
+4. 2 (new로 선언해야 한다.)  
+5. 3 (false이다.)  
+6. 3, 5
+7. 
+
+```java
+public class Exercise07 {
+    public static void main(String[] args) {
+        int max = 0;
+        int[] array = {1, 5, 3, 8, 2 };
+
+        for(int i=0; i<array.length; i++) {
+            if(array[i] > max) {
+                max = array[i];
+            }
+        }
+
+        System.out.println("max: " + max);
+    }
+}
+```  
+8. 
+
+```java
+public class Exercise08 {
+    public static void main(String[] args) {
+        int[][] array = {
+                {95, 86},
+                {83, 92, 96},
+                {78, 83, 93, 87, 88}
+        };
+
+        int sum = 0;
+        double avg = 0.0;
+
+        int count = 0;
+
+        for(int i=0; i<array.length; i++) {
+            for(int j=0; j<array[i].length; j++) {
+                sum += array[i][j];
+                count++;
+            }
+        }
+        avg = sum / count;
+        System.out.println("sum: " + sum);
+        System.out.println("avg: " + avg);
+    }
+}
+```  
+9. 
+
+
+```java
+import java.util.Scanner;
+
+public class Exercise09 {
+    public static void main(String[] args) {
+        boolean run = true;
+        int studentNum = 0;
+        int[] scores = null;
+        Scanner scanner = new Scanner(System.in);
+
+        while(run) {
+            System.out.println("--------------------------------------------");
+            System.out.println("1.학생수 | 2.점수입력 | 3.점수리스트 | 4.분석 | 5.종료");
+            System.out.println("--------------------------------------------");
+            System.out.print("선택> ");
+
+            int selectNo = scanner.nextInt();
+
+            if(selectNo == 1) {
+                System.out.print("학생수> ");
+                studentNum = scanner.nextInt();
+            } else if(selectNo == 2) {
+                scores = new int[studentNum];
+                for(int i=0; i<studentNum; i++) {
+                    System.out.print("scores[" + i + "]> ");
+                    scores[i] = scanner.nextInt();
+                }
+            } else if(selectNo == 3) {
+                for(int i=0; i<studentNum; i++) {
+                    System.out.println("scores[" + i + "]: " + scores[i]);
+                }
+
+            } else if(selectNo == 4) {
+                int sum =0;
+                double avg = 0;
+                int max = 0;
+
+                for(int i=0; i<studentNum; i++) {
+                    sum += scores[i];
+                    if(scores[i] > max) {
+                        max = scores[i];
+                    }
+                }
+                avg = sum / studentNum;
+
+                System.out.println("최고 점수: " + max);
+                System.out.println("평균 점수: " + avg);
+
+            } else if(selectNo == 5) {
+                run = false;
+            }
+        }
+
+        System.out.println("프로그램 종료");
+    }
+}
+```

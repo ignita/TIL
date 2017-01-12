@@ -187,3 +187,109 @@ public class 클래스 {
 클래스.필드;
 클래스.메소드( 매개값, ... )  
 ```
+- 원칙적으로는 클래스 이름으로 접근해야하지만, 객체 참조 변수로도 접근은 가능  
+ - 하지만 경고 표시가 나타난다.  
+
+**정적 초기화 블록**  
+- 인스턴스 필드는 생성자에 초기화하지만 정적 필드는 객체 생성 없이도 사용해야 하기 때문에 생성자에서 초기화 작업을 할 수 없다.  
+ - 정적 블록(static block)을 제공한다.  
+```
+static {  
+   ...
+}
+```
+- 정적 블록은 클래스가 메모리로 로딩될 때 자동적으로 실행된다.  
+```java
+public class Television {
+    static String company = "Good";
+    static String model = "LCD";
+    static String info;
+
+    static {
+        info = company + "-" + model;
+    }
+}
+```
+```java
+public class TelevisionExample {
+    public static void main(String[] args) {
+        System.out.println(Television.info);
+    }
+}
+```  
+ - info는 초기화하지 않고 정적 블록에서 company와 model 필드값을 서로 연결해 초기값으로 설정   
+
+
+**정적 메소드와 블록 선언 시 주의할 점**  
+- 객체가 없어도 실행된다는 특징 때문에, 내부에 인스턴스 필드나 인스턴스 메소드를 사용할 수 없다.
+  - `this` 키워드도 사용 불가  
+- 인스턴스 멤버들을 사용하고 싶다면 객체를 먼저 생성하고 참조 변수로 접근해야 한다.  
+```java
+static void Method3() {
+    ClassName obj = new ClassName();
+    obj.field1 = 10;
+    obj.method1();
+}
+```
+
+- **main() 메소드도 정적(static)메소드이므로 객체 생성 없이 인스턴스 필드와 인스턴스 메소드를 바로 사용할 수 없다.**    
+
+## 싱글톤(Singleton)  
+
+- 가끔 전체 프로그램에서 단 하나의 객체만 만들도록 보장해야 하는 경우가 있다. 그 객체를 싱글톤이라고 한다..  
+- 싱글톤을 만들려면 클래스 외부에서 new 연산자로 생성자를 호출할 수 없도록 막아야 한다.  
+ - 생성자를 호출한 만큼 객체가 생성되기 때문  
+- 생성자를 외부에서 호출할 수 없도록 하려면 생성자 앞에 private 접근 제한자를 붙여주면 된다.  
+- 자신의 타입인 정적 필드를 하나 선언하고 자신의 객체를 생성해 초기화한다.  
+- 정적 필드도 private 접근 제한자를 붙여 외부에서 필드값을 변경하지 못하도록 막는다.  
+- 대신 외부에서 호출할 수 있는 정적 메소드인 `getInstance()`를 선언하고 정ㅈ거 필드에서 참조하고 있는 자신의 객체를 리턴해준다.  
+```
+public class 클래스 {
+    // 정적 필드
+    private static 클래스 singleton = new 클래스();
+
+    // 생성자  
+    private 클래스() {}
+   
+    // 정적 메소드  
+    static 클래스 getInstance() { 
+        return singleton;
+    }
+}
+```
+- 외부에서 객체를 얻는 유일한 방법은 `getInstance()` 메소드를 호출하는 방법  
+ - 하나의 객체만 리턴. 다음 코드에서 변수1과 변수2는 동일한 객체를 참조  
+   ```
+   클래스 변수1 = 클래스.getInstance();  
+   클래스 변수2 = 클래스.getInstance();  
+   ```
+```java
+public class Singleton {
+    private static Singleton singleton = new Singleton();
+
+    private Singleton() {}
+
+    static Singleton getInstance() {
+        return singleton;
+    }
+}
+```
+```java
+public class SingletonExample {
+    public static void main(String[] args){
+
+//    Singleton obj1 = new Singleton();
+//    Singleton obj2 = new Singleton();  // 컴파일 에러 (private)
+
+        Singleton obj1 = Singleton.getInstance();
+        Singleton obj2 = Singleton.getInstance();
+
+        if(obj1 == obj2) { // 같은 객체이다.
+            System.out.println("같은 Singleton 객체 입니다."); 
+        } else {
+            System.out.println("다른 Singleton 객체 입니다.");
+        }
+    }
+}
+```
+

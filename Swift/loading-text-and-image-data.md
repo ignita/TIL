@@ -48,4 +48,71 @@ var <데이터 이름> = NSData(contentsOfURL: <URL 객체>)
 - `URLSession`을 사용  
  - 웹 서버와 통신하는 객체  
  - 지정한 URL의 데이터를 읽어주세요. 그리고 완료하면 그때 알려주세요  
+ - 백그라운드에서 처리. 메인 프로그램은 명령만 내리고, 다른 작업을 하는 동안 실제 통신 처리는 뒤에서 한다.(비동기 통신)  
+
+### 웹에서 텍스트를 내려받는 방법1: 메서드를 만들지 않는 방법  
+
+**1) URL 객체 만들기: URL(string: String)?**  
+- URL을 나타내는 문자열로 URL 객체(URL)를 만든다.  
+
+**2) URLSession 객체 만들기**  
+- URLSession.shared로 통신을 하는 객체를 만든다.  
+```
+let <URLSession 객체 이름> = UrlSession.shared
+```
+
+**3) 데이터를 내려받는 태스크 만들기**  
+
+- URLSession의 dataTask() 메서드를 사용해서 태스크(데이터를 내려받기 위한 작업)를 만든다.  
+- 내려받을 대상 URL을 지정하고, 통신이 완료도면 실행할 처리를 completionHandler 뒤에 작성  
+- 통신이 끝나면 (data, response, error) 형식의 튜플을 사용 가능  
+  - 각각 데이터, 상태 정보, 오류 코드를 나타낸다.  
+```
+let <태스크 이름> = <URLSession 객체 이름>.dataTask(with: url, completionHandler: {
+    (data, response, error) in
+     <통신 완료 때의 처리>
+})
+```
+
+**4) 로우 데이터를 UTF8 문자열로 변환**  
+- NSString을 사용  
+```
+if let <NSString 데이터> = NSString(data: <Raw 데이터>!, encoding: String.Encoding.utf8.rawValue)
+{
+}
+```
+
+**5) UTF8 문자열을 일반 문자열로 변환**  
+```
+let <문자열 데이터> = String(<NSString 데이터>)
+```
+
+**6) 태스크 실행**  
+- 텍스트 데이터를 내려받는 태스크를 모두 만들었으면 태스크를 실행  
+```
+<태스크 이름>.resume()
+```
+
+- 버튼을 누르면 지정한 URL에 있는 텍스트를 출력  
+```swift  
+@IBAction func tapLoadText1() {
+    // 버튼을 눌렀을 때  
+    if let url = URL(string: "https://....") {
+        // url이 nil이 아니라면 URLSession 객체 생성  
+        let urlSession = URLSession.shared  
+        // 데이터를 읽어들이는 태스크를 완료하면 completionHandler 처리가 수행  
+        let task = urlSession.dataTask(with: url, completionHandler: {
+            (data, response, error) in   
+            // Raw 데이터를 UTF8 문자열로 변환  
+            if let nsstr = NSString(data: data!, encoding: String.Encoding.utf8.rawValue) {
+            // UTF8 문자열로 변환되면 일반적인 문자열로 변환  
+            let str = String(nsstr)  
+            // 문자열 출력  
+            print("문자열=[\(str)]")
+        }
+    })
+    task.resume()
+ }
+}
+```
 

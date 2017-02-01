@@ -116,3 +116,51 @@ let <문자열 데이터> = String(<NSString 데이터>)
 }
 ```
 
+### 웹에서 텍스트를 내려받는 방법2: 메서드를 만드는 방법  
+
+- 복잡한 처리를 메서들 옮겨 사용할 수 있는 방법  
+
+**1) URL 객체 만들기: URL(string: String)?**
+**2) URLSession 객체 만들기**
+**3) 데이터를 내려받는 태스크 만들기**  
+
+- URLSession의 dataTask(with: url) 메서드를 사용해 태스크(데이터를 내려받기 위한 작업)를 만든다.  
+- 어떤 URL에서 내려받을지 지정. 통신을 완료했을 때 completionHandler 뒤에 입력한 이름의 메서드를 호출(그래서 해당 이름의 메서드를 생성해야 한다.)  
+```swift 
+let <태스크 이름> = <URLSession 객체 이름>.dataTask(with: <URL>, comletionHandler: <호출할 메서드 이름>)
+```
+
+**4) 태스크 실행**  
+**5) 통신을 완료했을 때 호출할 메서드 만들기**  
+```swift
+func <호출할 메서드 이름>(<데이터 이름>: Data?, <응답 데이터 이름>: URLResponse?, <오류 데이터 이름>: NSError?) {
+}
+```
+
+**6) 메서드 내부에서 로우 데이터를 UTF8 문자열로 변환**  
+- NSString을 사용  
+**7) 메서드 내부에서 UFT8 문자열을 일반 문자열로 변환**  
+
+- 버튼을 누르면 지정한 URL 텍스트를 출력  
+```swift
+    @IBAction func tapLoadText() {
+        if let url = URL(string: "https://wikibook.github.io/swift3-textbook/test.txt") {
+            // url이 nil이 아니라면 URLSession 객체 생성 
+            let urlSession = URLSession.shared
+            // 데이터를 읽어들이는 태스크를 완료하면 competionHandler 처리가 수행
+            let task = URLSession.dataTask(with: url, completionHandler: onFinish)
+            task.resume()
+        }
+    }
+    
+    // 읽어들이기를 완료했을 때 호출할 메서드 생성(이름은 자유)  
+    func onFinish(data: Data?, response: URLResponse?, error: NSError?) {
+        // Raw 데이터를 UTF8 문자열로 변환
+        if let nsstr = NSString(data: data!, encoding: String.Encoding.utf8.rawValue) {
+            // UTF8 문자열로 변환되면 일반적인 문자열로 변환
+            let str = String(nsstr)
+            // 문자열 출력
+            print("문자열=[\(str)]")
+        }
+    }
+```

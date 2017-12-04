@@ -1,0 +1,19 @@
+## 문자열 포함된 프로시저 찾기 
+
+### 오라클 
+
+```sql
+SELECT *
+FROM USER_SOURCE
+WHERE TYPE = 'PROCEDURE'
+AND UPPER(TEXT) LIKE '%찾을 문자열%'
+;
+```
+
+### MSSQL
+
+```sql
+SELECT DISTINCT OBJECT_NAME(ID)
+FROM SYS.SYSCOMMENTS
+WHERE TEXT LIKE '%등록계열%'
+```

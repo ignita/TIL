@@ -11,5 +11,6 @@ foreach(string file in files)
 {
     string desDir = Server.MapPath("/") + "파일경로/";
     File.Copy(file, desDir + Path.GetFileName(file));
+    // File.Copy(file, desDir + Path.GetFileName(file), true); true이면 overwrite
 }
 ```
